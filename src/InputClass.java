@@ -106,10 +106,26 @@ public class InputClass {
         String val;
         int len;
         do {
-            val = this.getStringValue(prompt, min_len, max_len);
+            System.out.print("Enter " + prompt + ": ");
+            val = input.nextLine();
             len = val.length();
 
-            // Check both length and character validity
+            // Check for invalid characters
+            String wrong = "";
+            for (int i = 0; i < len; i++) {
+                char c = val.charAt(i);
+                if (ifPresent(c, inval)) {
+                    wrong = wrong +c+',';
+                }
+            }
+
+            if (!wrong.isEmpty()) {
+                wrong = wrong.substring(0,wrong.length()-1);
+                System.out.println("Invalid value, "+wrong+" are not allowed in the input.");
+                continue; // Restart the loop if invalid characters found
+            }
+
+            // Check length validity
             if (len < min_len || len > max_len) {
                 if (len < min_len) {
                     System.out.println("Invalid value. Minimum length must be more than " + min_len);
@@ -117,23 +133,15 @@ public class InputClass {
                     System.out.println("Invalid value. Maximum length must be less than " + max_len);
                 }
             } else {
-                String wrong = "";
-                for (int i = 0; i < len; i++) {
-                    char c = val.charAt(i);
-                    if (ifPresent(c, inval)) {
-                        wrong += c;
-                    }
-                }
-                if (!wrong.isEmpty()) {
-                    System.out.println("Invalid value. " + wrong + " is not allowed in the input");
-                } else {
-                    break; // Both length and character validation pass, exit loop
-                }
+                break; // Both length and character validation pass, exit loop
             }
         } while (true);
 
         return val;
     }
+
+
+
 
     // Main functio that instantiates the input class and calls the necessary methods to take input
     public static void main(String args[]) {
